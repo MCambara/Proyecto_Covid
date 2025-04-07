@@ -1,4 +1,4 @@
-package org.example.db.model;
+package org.prograIII.db.model;
 
 import java.util.Date;
 

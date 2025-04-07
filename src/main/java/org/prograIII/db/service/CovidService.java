@@ -1,6 +1,6 @@
-package org.example.db.service;
-import org.example.db.dao.CovidDao;
-import org.example.db.model.CovidModel;
+package org.prograIII.db.service;
+import org.prograIII.db.dao.CovidDao;
+import org.prograIII.db.model.CovidModel;
 import java.sql.SQLException;
 import java.util.List;
 

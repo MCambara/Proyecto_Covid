@@ -1,6 +1,6 @@
-package org.example.db.dao;
+package org.prograIII.db.dao;
 
-import org.example.db.model.CovidModel;
+import org.prograIII.db.model.CovidModel;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
