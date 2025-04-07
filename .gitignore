@@ -1,0 +1,39 @@
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+build/
+.mvn/wrapper/maven-wrapper.jar
+
+### IDE ###
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+### System ###
+.DS_Store
+Thumbs.db
+
+### Archivos de configuración sensibles ###
+/src/main/resources/application.properties
+/config/application-*.properties
+*.env
+
+### Excepciones (mantiene estructura de directorios) ###
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
