@@ -21,9 +21,37 @@ public class ReportLoader {
         this.province = province;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public int getConfirmed() {
+        return confirmed;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getRecovered() {
+        return recovered;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
     @Override
     public String toString() {
-        return "[Fecha: " + date + ", Confirmados: " + confirmed + ", Muertes: " + deaths + ", Recuperados: " + recovered +
-                ", ISO: " + iso + ", Región: " + regionName + ", Provincia: " + (province.isEmpty() ? "General" : province) + "]";
+        return "Fecha: " + date + ", Confirmados: " + confirmed + ", Muertes: " + deaths + ", Recuperados: " + recovered +
+                ", ISO: " + iso + ", Región: " + regionName + ", Provincia: " + (province.isEmpty() ? "General" : province);
     }
 }

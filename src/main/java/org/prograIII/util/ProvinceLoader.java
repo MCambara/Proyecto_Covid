@@ -16,12 +16,28 @@ public class ProvinceLoader {
         this.lng = lng;
     }
 
-    // Getters, toString(), etc.
+    public String getIso() {
+        return iso;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
     @Override
     public String toString() {
         return name + " (" + province + ") - " + lat + ", " + lng;
     }
-
-
-
 }

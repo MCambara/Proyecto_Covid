@@ -5,6 +5,12 @@ import org.prograIII.util.RegionLoader;
 import org.prograIII.covidApis.CovidProvinces;
 import org.prograIII.util.ProvinceLoader;
 import org.prograIII.util.ReportLoader;
+import org.prograIII.db.dao.RegionDao;
+import org.prograIII.db.dao.ReportDao; // Importamos el ReportDao
+import org.prograIII.db.model.RegionModel;
+import org.prograIII.db.model.ProvinceModel;
+import org.prograIII.db.model.ReportModel; // Importamos el ReportModel
+import org.prograIII.db.service.ProvinceService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,9 +18,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class Main {
+
+    private static final RegionDao regionDao = new RegionDao();
+    private static final ProvinceService provinceService = new ProvinceService(); // Usamos el service para provincias
+    private static final ReportDao reportDao = new ReportDao(); // Usamos el ReportDao
+
     public static void main(String[] args) throws Exception {
         System.out.println("[INFO] Iniciando prueba de RegionLoader...");
-
         Map<Integer, Map<String, String>> regiones = RegionLoader.loadRegions();
 
         if (regiones.isEmpty()) {
@@ -23,6 +33,7 @@ public class Main {
             regiones.forEach((index, data) ->
                     System.out.println(index + " => ISO: " + data.get("iso") + ", Name: " + data.get("name"))
             );
+            insertRegionsToDatabase(regiones);
         }
 
         CovidProvinces service = new CovidProvinces();
@@ -31,26 +42,55 @@ public class Main {
             System.out.println("ISO: " + iso);
             for (ProvinceLoader info : regionList) {
                 System.out.println("  - " + info);
+
+                ProvinceModel province = new ProvinceModel(
+                        info.getIso(),
+                        info.getProvince(),
+                        info.getName(),
+                        info.getLat(),
+                        info.getLng()
+                );
+
+                boolean success = provinceService.saveProvince(province); // Usamos el service
+                if (success) {
+                    System.out.println("[INFO] Provincia insertada: " + info.getProvince());
+                } else {
+                    System.err.println("[ERROR] No se pudo insertar la provincia: " + info.getProvince());
+                }
             }
         });
 
-        // Instanciamos el servicio para obtener los reportes de COVID
         System.out.println("[INFO] Iniciando obtención de datos de COVID...");
-        // 1. Carga de regiones
         Set<String> isoSet = getIsoSetFromRegionLoader(regiones);
-
-        // 2. Fecha que se quiere consultar (modificable)
         String fechaConsulta = "2022-03-09";
 
-        // 3. Lógica para consultar los reportes
         CovidReports covidReportsService = new CovidReports();
         Map<String, List<ReportLoader>> covidReports = covidReportsService.fetchCovidDataForAllProvinces(isoSet, fechaConsulta);
 
-        // 4. Mostrar resultados
         covidReports.forEach((iso, reportList) -> {
             System.out.println("ISO: " + iso);
             for (ReportLoader report : reportList) {
                 System.out.println("  - " + report);
+
+                // Creamos el modelo de Reporto a insertar en la base de datos
+                ReportModel reportModel = new ReportModel(
+                        0, // El id es autoincrementado, por lo que pasamos 0
+                        report.getDate(),
+                        report.getConfirmed(),
+                        report.getDeaths(),
+                        report.getRecovered(),
+                        report.getIso(),
+                        report.getRegionName(),
+                        report.getProvince()
+                );
+
+                // Insertamos el reporte en la base de datos
+                boolean reportSuccess = reportDao.save(reportModel);
+                if (reportSuccess) {
+                    System.out.println("[INFO] Reporte insertado en la base de datos: " + report);
+                } else {
+                    System.err.println("[ERROR] No se pudo insertar el reporte: " + report);
+                }
             }
         });
 
@@ -66,5 +106,21 @@ public class Main {
             }
         }
         return isoSet;
+    }
+
+    private static void insertRegionsToDatabase(Map<Integer, Map<String, String>> regiones) {
+        for (Map.Entry<Integer, Map<String, String>> entry : regiones.entrySet()) {
+            Map<String, String> data = entry.getValue();
+            String iso = data.get("iso");
+            String name = data.get("name");
+
+            RegionModel region = new RegionModel(0, iso, name);
+            boolean success = regionDao.save(region);
+            if (success) {
+                System.out.println("[INFO] Región insertada: " + iso);
+            } else {
+                System.err.println("[ERROR] Error al insertar la región: " + iso);
+            }
+        }
     }
 }
