@@ -11,11 +11,11 @@ public class PropertyReader {
         try (InputStream input = PropertyReader.class.getClassLoader()
                 .getResourceAsStream("application.properties")) {
             if (input == null) {
-                throw new IOException("Archivo de propiedades no encontrado");
+                throw new IOException("Properties file not found");
             }
             props.load(input);
         } catch (IOException e) {
-            throw new RuntimeException("Error cargando el archivo de propiedades", e);
+            throw new RuntimeException("Error loading the properties file", e);
         }
     }
 
@@ -23,22 +23,22 @@ public class PropertyReader {
         return props.getProperty(key);
     }
 
-    // Método para obtener la URL de la base de datos
+    // Method to get the database URL
     public static String getDbUrl() {
         return getProperty("db.url");
     }
 
-    // Método para obtener el nombre de usuario de la base de datos
+    // Method to get the database username
     public static String getDbUsername() {
         return getProperty("db.username");
     }
 
-    // Método para obtener la contraseña de la base de datos
+    // Method to get the database password
     public static String getDbPassword() {
         return getProperty("db.password");
     }
 
-    // Métodos para configuración de la API de COVID
+    // Methods for COVID API configuration
     public static String getCovidApiBaseUrl() {
         return getProperty("covid.api.base-url");
     }
@@ -51,7 +51,7 @@ public class PropertyReader {
         return getProperty("covid.api.host");
     }
 
-    // Métodos para parámetros de la aplicación
+    // Methods for application parameters
     public static String getAppInitialDelay() {
         return getProperty("app.initial-delay");
     }
@@ -60,7 +60,7 @@ public class PropertyReader {
         return getProperty("app.target-date");
     }
 
-    // Método para obtener el nivel de logging
+    // Method to get the logging level
     public static String getLoggingLevel() {
         return getProperty("logging.level.org.prograIII");
     }

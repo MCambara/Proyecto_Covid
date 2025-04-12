@@ -26,7 +26,7 @@ public class ProvinceDao {
 
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
-            logger.error("[ERROR] Error al insertar provincia: {} -> {}", province, e.getMessage());
+            logger.error("[ERROR] Error inserting province: {} -> {}", province, e.getMessage());
             return false;
         }
     }

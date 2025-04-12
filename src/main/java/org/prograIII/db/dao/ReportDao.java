@@ -28,7 +28,7 @@ public class ReportDao {
 
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
-            logger.error("[ERROR] Error al insertar reporte: {} -> {}", report, e.getMessage());
+            logger.error("[ERROR] Error inserting report: {} -> {}", report, e.getMessage());
             return false;
         }
     }

@@ -51,7 +51,7 @@ public class ReportLoader {
 
     @Override
     public String toString() {
-        return "Fecha: " + date + ", Confirmados: " + confirmed + ", Muertes: " + deaths + ", Recuperados: " + recovered +
-                ", ISO: " + iso + ", Región: " + regionName + ", Provincia: " + (province.isEmpty() ? "General" : province);
+        return "Date: " + date + ", Confirmed: " + confirmed + ", Deaths: " + deaths + ", Recovered: " + recovered +
+                ", ISO: " + iso + ", Region: " + regionName + ", Province: " + (province.isEmpty() ? "General" : province);
     }
 }

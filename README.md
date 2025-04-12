@@ -32,12 +32,11 @@ Una vez recibidos los datos desde las APIs, y antes de ser mostrados por consola
 - **Hilos (Threads)** para la ejecución automática en segundo plano
 - **HashMap** como estructura de almacenamiento temporal
 - **Base de datos relacional** (por ejemplo, MySQL)
-- **application.properties** para la configuración del entorno y datos sensibles
 - **Log4j** para el manejo de logs y seguimiento de ejecución
 
 ## Manejo de Configuración
 
-Las configuraciones sensibles, como la conexión a la base de datos y otras propiedades del entorno, están definidas en el archivo `application.properties`. Este archivo es interpretado automáticamente por Spring Boot y permite un manejo seguro y centralizado de la configuración.
+Inicialmente intentamos utilizar el archivo `application.properties` para cargar automáticamente las configuraciones sensibles como las credenciales de la base de datos, aprovechando las capacidades de Spring Boot. Sin embargo, tuvimos inconvenientes con la lectura desde este archivo, por lo que como solución temporal **se optó por "quemar" directamente los datos de configuración dentro del código**. Aunque esta no es la práctica más recomendable, nos permitió avanzar con el desarrollo del proyecto y mantener el funcionamiento completo del sistema.
 
 ## Conclusión
 

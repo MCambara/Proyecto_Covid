@@ -18,7 +18,7 @@ public class CovidReports {
     private static final String API_HOST = "covid-19-statistics.p.rapidapi.com";
     private static final Logger logger = LogManager.getLogger(CovidReports.class);
 
-    // Ahora recibe la fecha como parámetro
+    // Now receives the date as a parameter
     public Map<String, List<ReportLoader>> fetchCovidDataForAllProvinces(Set<String> isoSet, String date) {
         Map<String, List<ReportLoader>> covidDataMap = new HashMap<>();
         int counter = 0;
@@ -34,10 +34,11 @@ public class CovidReports {
             }
         }
 
-        logger.info("[INFO] Total de reportes procesados: {}", counter);
+        logger.info("[INFO] Total reports processed: {}", counter);
         return covidDataMap;
     }
-    //Recibe la fecha como parametro
+
+    // Receives the date as a parameter
     private JSONObject fetchDataByIso(String iso, String date) {
         try {
             String fullUrl = BASE_API_URL + date + "&iso=" + iso;
@@ -58,11 +59,11 @@ public class CovidReports {
                 in.close();
                 return new JSONObject(response.toString());
             } else {
-                logger.warn("[WARN] Falló la consulta para ISO {}. Código: {}", iso, responseCode);
+                logger.warn("[WARN] Query failed for ISO {}. Code: {}", iso, responseCode);
                 return new JSONObject();
             }
         } catch (Exception e) {
-            logger.error("[ERROR] Excepción al consultar ISO {}: {}", iso, e.getMessage());
+            logger.error("[ERROR] Exception while querying ISO {}: {}", iso, e.getMessage());
             return new JSONObject();
         }
     }
@@ -93,4 +94,3 @@ public class CovidReports {
         return reportList;
     }
 }
-
