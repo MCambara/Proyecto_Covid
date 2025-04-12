@@ -13,6 +13,8 @@ import org.prograIII.util.RegionLoader;
 import org.prograIII.util.ReportLoader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import jakarta.annotation.PostConstruct;
 
@@ -23,6 +25,7 @@ import java.util.Set;
 
 @Component
 public class CovidThread implements Runnable {
+    private static final Logger logger = LogManager.getLogger(CovidThread.class);
 
     @Value("${app.initial-delay}")
     private int initialDelay;
@@ -49,15 +52,15 @@ public class CovidThread implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("[INFO] Esperando " + initialDelay + " ms antes de iniciar...");
+            logger.info("[INFO] Esperando {} ms antes de iniciar...", initialDelay);
             Thread.sleep(initialDelay);
 
-            System.out.println("[INFO] Iniciando ejecución con fecha objetivo: " + targetDate);
+            logger.info("[INFO] Iniciando ejecución con fecha objetivo: {}", targetDate);
             Map<Integer, Map<String, String>> regiones = RegionLoader.loadRegions();
 
-            System.out.println("[INFO] Regiones obtenidas:");
+            logger.info("[INFO] Regiones obtenidas:");
             regiones.forEach((index, data) ->
-                    System.out.println(index + " => ISO: " + data.get("iso") + ", Name: " + data.get("name"))
+                    logger.info("{} => ISO: {}, Name: {}", index, data.get("iso"), data.get("name"))
             );
 
             insertRegionsToDatabase(regiones);
@@ -66,13 +69,13 @@ public class CovidThread implements Runnable {
             // Obtener y guardar reportes de COVID
             insertCovidReportsToDatabase(regiones);
 
-            System.out.println("[INFO] Ejecución del hilo completada.");
+            logger.info("[INFO] Ejecución del hilo completada.");
 
         } catch (InterruptedException e) {
-            System.err.println("[ERROR] Hilo interrumpido: " + e.getMessage());
+            logger.error("[ERROR] Hilo interrumpido: {}", e.getMessage());
             Thread.currentThread().interrupt();
         } catch (Exception e) {
-            System.err.println("[ERROR] Error en el hilo: " + e.getMessage());
+            logger.error("[ERROR] Error en el hilo: {}", e.getMessage());
         }
     }
 
@@ -84,9 +87,9 @@ public class CovidThread implements Runnable {
             RegionModel region = new RegionModel(0, iso, name);
             boolean success = regionDao.save(region);
             if (success) {
-                System.out.println("[INFO] Región insertada: " + iso);
+                logger.info("[INFO] Región insertada: {}", iso);
             } else {
-                System.err.println("[ERROR] Error al insertar la región: " + iso);
+                logger.error("[ERROR] Error al insertar la región: {}", iso);
             }
         }
     }
@@ -95,9 +98,9 @@ public class CovidThread implements Runnable {
         CovidProvinces service = new CovidProvinces();
         Map<String, List<ProvinceLoader>> allData = service.fetchAllRegionData();
         allData.forEach((iso, regionList) -> {
-            System.out.println("ISO: " + iso);
+            logger.info("ISO: " + iso);
             for (ProvinceLoader info : regionList) {
-                System.out.println("  - " + info);
+                logger.info("  - " + info);
 
                 ProvinceModel province = new ProvinceModel(
                         info.getIso(),
@@ -109,9 +112,9 @@ public class CovidThread implements Runnable {
 
                 boolean success = provinceDao.save(province);
                 if (success) {
-                    System.out.println("[INFO] Provincia insertada: " + info.getProvince());
+                    logger.info("[INFO] Provincia insertada: " + info.getProvince());
                 } else {
-                    System.err.println("[ERROR] No se pudo insertar la provincia: " + info.getProvince());
+                    logger.error("[ERROR] No se pudo insertar la provincia: {}", info.getProvince());
                 }
             }
         });
@@ -125,9 +128,9 @@ public class CovidThread implements Runnable {
         Map<String, List<ReportLoader>> covidReports = covidReportsService.fetchCovidDataForAllProvinces(isoSet, fechaConsulta);
 
         covidReports.forEach((iso, reportList) -> {
-            System.out.println("ISO: " + iso);
+            logger.info("ISO: " + iso);
             for (ReportLoader report : reportList) {
-                System.out.println("  - " + report);
+                logger.info("  - {}", report);
 
                 // Creamos el modelo de Reporto a insertar en la base de datos
                 ReportModel reportModel = new ReportModel(
@@ -144,9 +147,9 @@ public class CovidThread implements Runnable {
                 // Insertamos el reporte en la base de datos
                 boolean reportSuccess = reportDao.save(reportModel);
                 if (reportSuccess) {
-                    System.out.println("[INFO] Reporte insertado en la base de datos: " + report);
+                    logger.info("[INFO] Reporte insertado en la base de datos: {}", report);
                 } else {
-                    System.err.println("[ERROR] No se pudo insertar el reporte: " + report);
+                    logger.error("[ERROR] No se pudo insertar el reporte: {}", report);
                 }
             }
         });

@@ -3,18 +3,20 @@ package org.prograIII.covidApis;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prograIII.util.ReportLoader;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CovidReports {
 
     private static final String BASE_API_URL = "https://covid-19-statistics.p.rapidapi.com/reports?date=";
     private static final String API_KEY = "2505eda46amshc60713983b5e807p1da25ajsn36febcbf4a71";
     private static final String API_HOST = "covid-19-statistics.p.rapidapi.com";
+    private static final Logger logger = LogManager.getLogger(CovidReports.class);
 
     // Ahora recibe la fecha como parámetro
     public Map<String, List<ReportLoader>> fetchCovidDataForAllProvinces(Set<String> isoSet, String date) {
@@ -28,11 +30,11 @@ public class CovidReports {
                 covidDataMap.put(iso, reportList);
                 counter += reportList.size();
             } catch (Exception e) {
-                System.out.println("[ERROR] Error processing ISO: " + iso + " - " + e.getMessage());
+                logger.error("[ERROR] Error processing ISO: {} - {}", iso, e.getMessage());
             }
         }
 
-        System.out.println("[INFO] Total de reportes procesados: " + counter);
+        logger.info("[INFO] Total de reportes procesados: {}", counter);
         return covidDataMap;
     }
     //Recibe la fecha como parametro
@@ -56,11 +58,11 @@ public class CovidReports {
                 in.close();
                 return new JSONObject(response.toString());
             } else {
-                System.out.println("[WARN] Falló la consulta para ISO " + iso + ". Código: " + responseCode);
+                logger.warn("[WARN] Falló la consulta para ISO {}. Código: {}", iso, responseCode);
                 return new JSONObject();
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] Excepción al consultar ISO " + iso + ": " + e.getMessage());
+            logger.error("[ERROR] Excepción al consultar ISO {}: {}", iso, e.getMessage());
             return new JSONObject();
         }
     }

@@ -2,7 +2,6 @@ package org.prograIII.db.service;
 
 import org.prograIII.db.dao.RegionDao;
 import org.prograIII.db.model.RegionModel;
-
 import java.util.List;
 
 public class RegionService {

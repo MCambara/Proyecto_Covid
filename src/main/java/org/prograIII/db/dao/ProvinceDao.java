@@ -2,11 +2,16 @@ package org.prograIII.db.dao;
 
 import org.prograIII.db.dabaBaseConnection.DatabaseConnection;
 import org.prograIII.db.model.ProvinceModel;
-
+import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+@Repository
 public class ProvinceDao {
+
+    private static final Logger logger = LogManager.getLogger(ProvinceDao.class);
 
     public boolean save(ProvinceModel province) {
         String sql = "INSERT INTO provinces (iso, province, name, lat, lng) VALUES (?, ?, ?, ?, ?)";
@@ -21,7 +26,7 @@ public class ProvinceDao {
 
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
-            System.err.println("[ERROR] Error al insertar provincia: " + province + " -> " + e.getMessage());
+            logger.error("[ERROR] Error al insertar provincia: {} -> {}", province, e.getMessage());
             return false;
         }
     }

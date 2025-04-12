@@ -11,8 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.*;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CovidProvinces {
 
     private static final String API_URL = "https://covid-19-statistics.p.rapidapi.com/provinces?iso=";
@@ -21,14 +22,11 @@ public class CovidProvinces {
 
     //metodo que llamamos en main para llamar a la api, guardar los datos en una mapa, y mostrar toda la informacion
     public Map<String, List<ProvinceLoader>> fetchAllRegionData() throws JSONException {
-        int counter = 0;
         Set<String> isoSet = getIsoSet();
         Map<String, List<ProvinceLoader>> regionDataMap = new HashMap<>();
         for (String iso : isoSet) {
             JSONObject response = fetchDataByIso(iso);
             storeProvinceData(iso, response, regionDataMap);
-            System.out.println("test"+counter);
-            counter++;
         }
 
         return regionDataMap;

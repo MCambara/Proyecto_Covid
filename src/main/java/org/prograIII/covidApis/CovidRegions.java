@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CovidRegions {
 
     private static final Logger logger = Logger.getLogger(CovidRegions.class.getName());
